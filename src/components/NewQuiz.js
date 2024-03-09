@@ -1,4 +1,6 @@
 import { React, useState, useEffect } from "react";
+import axios from "axios";
+import { usePageContext } from "../PageContext";
 
 function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
   const [qArray, setQArray] = useState([]);
@@ -12,6 +14,7 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
   const [a4Input, setA4Input] = useState("");
   const [answer, setAnswer] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const { username } = usePageContext("");
   const titleClick = () => {
     title === "" ? setIsTitleSet(false) : setIsTitleSet(true);
   };
@@ -69,21 +72,48 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
     setAnswer(e);
   };
 
-  const createQuiz = () => {
-    var format = [...qArray, { title: { title } }];
-    var strung = JSON.stringify(format);
-    setQuizList(...quizList, strung);
-    setTitle("");
-    setNewPop(false);
-    setAnswer("");
+  const createQuiz = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/Users/newQuiz", {
+        title: title,
+        newQuiz: qArray,
+        username: username,
+        password: "none",
+      });
 
-    setQInput("");
-    setA1Input("");
-    setA2Input("");
-    setA3Input("");
-    setA4Input("");
-    setErrMsg("");
+      if (response.data.success) {
+        setTitle("");
+        setNewPop(false);
+        setAnswer("");
+
+        setQInput("");
+        setA1Input("");
+        setA2Input("");
+        setA3Input("");
+        setA4Input("");
+        setErrMsg("");
+      } else {
+      }
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
+
+  // const createQuiz = () => {
+  //   // var format = [...qArray, { title: { title } }];
+  //   // var strung = JSON.stringify(format);
+  //   // setQuizList(...quizList, strung);
+  //   setTitle("");
+  //   setNewPop(false);
+  //   setAnswer("");
+
+  //   setQInput("");
+  //   setA1Input("");
+  //   setA2Input("");
+  //   setA3Input("");
+  //   setA4Input("");
+  //   setErrMsg("");
+  // };
 
   if (!newPop) return null;
   return (

@@ -1,14 +1,15 @@
 import { React, useState } from "react";
-// import { usePageContext } from "../PageContext";
+import { usePageContext } from "../PageContext";
 import CreateAccount from "./createAccount";
-// import axios from "axios";
+import axios from "axios";
 
-function LoginPopup({ logPop, setLogPop }) {
+function LoginPopup({ logPop, setLogPop, isLoggedIn, setIsLoggedIn }) {
   const [userLogin, setUserLogin] = useState("");
   const [passLogin, setPassLogin] = useState("");
   const [create, setCreate] = useState(false);
   const [err, setErr] = useState("");
-  // const { setToken } = usePageContext("");
+  const { setToken } = usePageContext("");
+  const { setUsername } = usePageContext("");
   if (!logPop) return null;
 
   const closer = () => {
@@ -20,24 +21,26 @@ function LoginPopup({ logPop, setLogPop }) {
   const creator = () => {
     setCreate(true);
   };
-  //   const handleLogin = async () => {
-  //     try {
-  //       const response = await axios.post("http://localhost:5000/Auth/login", {
-  //         username: userLogin,
-  //         password: passLogin,
-  //       });
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/Auth/login", {
+        username: userLogin,
+        password: passLogin,
+      });
 
-  //       if (response.data.success) {
-  //         setToken(response.data.token);
-  //         setErr("Login Success");
-  //         setLoggedIn(true);
-  //       } else {
-  //         setErr("Login Failed, Try Again");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error during login:", error);
-  //     }
-  //   };
+      if (response.data.success) {
+        setToken(response.data.token);
+        setUsername(userLogin);
+        setLogPop(false);
+        setErr("");
+        setIsLoggedIn(true);
+      } else {
+        setErr("Login Failed, Try Again");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -62,7 +65,7 @@ function LoginPopup({ logPop, setLogPop }) {
               />
               {err}
               <button
-                // onClick={handleLogin}
+                onClick={handleLogin}
                 className="px-4  w-full py-2 border-2 text-xl sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
               >
                 Login
