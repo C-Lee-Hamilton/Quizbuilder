@@ -15,6 +15,7 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
   const [answer, setAnswer] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const { username } = usePageContext("");
+  const password = "";
   const titleClick = () => {
     title === "" ? setIsTitleSet(false) : setIsTitleSet(true);
   };
@@ -76,7 +77,7 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
     try {
       const response = await axios.post("http://localhost:5000/Users/newQuiz", {
         title: title,
-        newQuiz: qArray,
+        qArray: qArray,
         username: username,
         password: "none",
       });

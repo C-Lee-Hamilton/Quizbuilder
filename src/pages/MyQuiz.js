@@ -9,8 +9,7 @@ function MyQuiz({ myQ }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [quizList, setQuizList] = useState([]);
   const [test, setTest] = useState([]);
-  const { setToken } = usePageContext("");
-  const { username } = usePageContext("");
+  const { setToken, token, username } = usePageContext("");
 
   const handleLogout = async () => {
     try {
@@ -35,10 +34,13 @@ function MyQuiz({ myQ }) {
   const fetchQuizzes = async () => {
     try {
       const response = await axios.get("http://localhost:5000/auth/my-quiz", {
-        username: username,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: { username },
       });
-      setTest(response.data.myQuizzes);
-      console.log(response.myQuizzes);
+      setTest(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching hours:", error);
     }
@@ -48,6 +50,7 @@ function MyQuiz({ myQ }) {
   return (
     <div className="flex-1 flex flex-col items-center">
       <div className=" flex flex-col">
+        {username}
         <button
           onClick={fetchQuizzes}
           className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
@@ -84,8 +87,11 @@ function MyQuiz({ myQ }) {
           Login to create quizzes
         </div>
       )}
-
-      {test}
+      {test.map((quiz, index) => (
+        <div key={index} className="text-white">
+          {quiz.title}
+        </div>
+      ))}
 
       <NewQuiz
         newPop={newPop}
