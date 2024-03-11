@@ -1,8 +1,8 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import axios from "axios";
 import { usePageContext } from "../PageContext";
 
-function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
+function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
   const [qArray, setQArray] = useState([]);
   const [isTitleSet, setIsTitleSet] = useState(false);
   const [title, setTitle] = useState("");
@@ -15,7 +15,7 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
   const [answer, setAnswer] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const { username } = usePageContext("");
-  const password = "";
+
   const titleClick = () => {
     title === "" ? setIsTitleSet(false) : setIsTitleSet(true);
   };
@@ -34,7 +34,6 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
         },
       ]);
       setAnswer("");
-
       setQInput("");
       setA1Input("");
       setA2Input("");
@@ -69,24 +68,20 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
     console.log(qArray);
   };
 
-  const saveAnswer = (e) => {
-    setAnswer(e);
-  };
-
   const createQuiz = async () => {
     try {
       const response = await axios.post("http://localhost:5000/Users/newQuiz", {
         title: title,
         qArray: qArray,
         username: username,
-        password: "none",
       });
 
       if (response.data.success) {
+        fetchQuizzes();
         setTitle("");
         setNewPop(false);
         setAnswer("");
-
+        setIsTitleSet("");
         setQInput("");
         setA1Input("");
         setA2Input("");
@@ -100,21 +95,18 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
     }
   };
 
-  // const createQuiz = () => {
-  //   // var format = [...qArray, { title: { title } }];
-  //   // var strung = JSON.stringify(format);
-  //   // setQuizList(...quizList, strung);
-  //   setTitle("");
-  //   setNewPop(false);
-  //   setAnswer("");
-
-  //   setQInput("");
-  //   setA1Input("");
-  //   setA2Input("");
-  //   setA3Input("");
-  //   setA4Input("");
-  //   setErrMsg("");
-  // };
+  const closeButton = () => {
+    setTitle("");
+    setNewPop(false);
+    setAnswer("");
+    setIsTitleSet("");
+    setQInput("");
+    setA1Input("");
+    setA2Input("");
+    setA3Input("");
+    setA4Input("");
+    setErrMsg("");
+  };
 
   if (!newPop) return null;
   return (
@@ -237,6 +229,12 @@ function NewQuiz({ newPop, setNewPop, quizList, setQuizList }) {
           </div>
         </>
       )}
+      <button
+        onClick={closeButton}
+        className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+      >
+        Close
+      </button>
     </div>
   );
 }

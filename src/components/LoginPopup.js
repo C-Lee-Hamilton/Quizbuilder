@@ -1,15 +1,28 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { usePageContext } from "../PageContext";
 import CreateAccount from "./createAccount";
 import axios from "axios";
 
-function LoginPopup({ logPop, setLogPop, isLoggedIn, setIsLoggedIn }) {
+function LoginPopup({
+  logPop,
+  setLogPop,
+  setIsLoggedIn,
+  isLoggedIn,
+  fetchQuizzes,
+}) {
   const [userLogin, setUserLogin] = useState("");
   const [passLogin, setPassLogin] = useState("");
   const [create, setCreate] = useState(false);
   const [err, setErr] = useState("");
   const { setToken } = usePageContext("");
   const { setUsername } = usePageContext("");
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchQuizzes();
+    }
+  }, [fetchQuizzes, isLoggedIn]);
+
   if (!logPop) return null;
 
   const closer = () => {

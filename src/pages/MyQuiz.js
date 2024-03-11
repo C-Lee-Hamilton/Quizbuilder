@@ -7,8 +7,8 @@ function MyQuiz({ myQ }) {
   const [logPop, setLogPop] = useState(false);
   const [newPop, setNewPop] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [quizList, setQuizList] = useState([]);
-  const [test, setTest] = useState([]);
+
+  const [userQuizzes, setUserQuizzes] = useState([]);
   const { setToken, token, username } = usePageContext("");
 
   const handleLogout = async () => {
@@ -16,8 +16,24 @@ function MyQuiz({ myQ }) {
       await axios.post("http://localhost:5000/Auth/logout");
       setToken("");
       setIsLoggedIn(false);
+      setUserQuizzes([]);
     } catch (error) {
       console.error("Error during logout:", error);
+    }
+  };
+
+  const fetchQuizzes = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/auth/my-quiz", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: { username },
+      });
+      setUserQuizzes(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
     }
   };
 
@@ -31,32 +47,10 @@ function MyQuiz({ myQ }) {
     setNewPop(!newPop);
   };
 
-  const fetchQuizzes = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/auth/my-quiz", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: { username },
-      });
-      setTest(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching hours:", error);
-    }
-  };
-
   if (!myQ) return null;
   return (
     <div className="flex-1 flex flex-col items-center">
       <div className=" flex flex-col">
-        {username}
-        <button
-          onClick={fetchQuizzes}
-          className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
-        >
-          TesterButton
-        </button>
         <button
           onClick={loginClick}
           className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
@@ -76,6 +70,7 @@ function MyQuiz({ myQ }) {
         )}
       </div>
       <Login
+        fetchQuizzes={fetchQuizzes}
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
         logPop={logPop}
@@ -87,17 +82,22 @@ function MyQuiz({ myQ }) {
           Login to create quizzes
         </div>
       )}
-      {test.map((quiz, index) => (
-        <div key={index} className="text-white">
-          {quiz.title}
+      {!newPop && (
+        <div className="w-full ">
+          {userQuizzes.map((quiz, index) => (
+            <div key={index} className="text-white">
+              <button className=" border-solid w-11/12 rounded-lg my-2  bg-green-400 border-8 border-white-100 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom">
+                {quiz.title}
+              </button>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
 
       <NewQuiz
         newPop={newPop}
         setNewPop={setNewPop}
-        quizList={quizList}
-        setQuizList={setQuizList}
+        fetchQuizzes={fetchQuizzes}
       />
     </div>
   );
