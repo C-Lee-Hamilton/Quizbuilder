@@ -9,6 +9,7 @@ function LoginPopup({
   setIsLoggedIn,
   isLoggedIn,
   fetchQuizzes,
+  userQuizzes,
 }) {
   const [userLogin, setUserLogin] = useState("");
   const [passLogin, setPassLogin] = useState("");
@@ -16,12 +17,13 @@ function LoginPopup({
   const [err, setErr] = useState("");
   const { setToken } = usePageContext("");
   const { setUsername } = usePageContext("");
-
+  const [hasEffectRun, setHasEffectRun] = useState(false);
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && userQuizzes.length === 0 && !hasEffectRun) {
       fetchQuizzes();
+      setHasEffectRun(true);
     }
-  }, [fetchQuizzes, isLoggedIn]);
+  }, [fetchQuizzes, isLoggedIn, hasEffectRun]);
 
   if (!logPop) return null;
 

@@ -25,12 +25,12 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
       setQArray([
         ...qArray,
         {
-          Question: { qInput },
-          A: { a1Input },
-          B: { a2Input },
-          C: { a3Input },
-          D: { a4Input },
-          Answer: { answer },
+          Question: qInput,
+          A: a1Input,
+          B: a2Input,
+          C: a3Input,
+          D: a4Input,
+          Answer: answer,
         },
       ]);
       setAnswer("");
@@ -51,12 +51,12 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
       setQArray([
         ...qArray,
         {
-          Question: { qInput },
-          A: { a1Input },
-          B: { a2Input },
-          C: { a3Input },
-          D: { a4Input },
-          Answer: { answer },
+          Question: qInput,
+          A: a1Input,
+          B: a2Input,
+          C: a3Input,
+          D: a4Input,
+          Answer: answer,
         },
       ]);
       setIsSaved(true);

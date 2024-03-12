@@ -3,10 +3,13 @@ import { usePageContext } from "../PageContext";
 import axios from "axios";
 import Login from "../components/LoginPopup";
 import NewQuiz from "../components/NewQuiz";
+import TakeQuiz from "../components/TakeQuiz";
 function MyQuiz({ myQ }) {
   const [logPop, setLogPop] = useState(false);
   const [newPop, setNewPop] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [take, setTake] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState([]);
 
   const [userQuizzes, setUserQuizzes] = useState([]);
   const { setToken, token, username } = usePageContext("");
@@ -47,6 +50,16 @@ function MyQuiz({ myQ }) {
     setNewPop(!newPop);
   };
 
+  const takeQuizButton = (e) => {
+    setSelectedQuiz([
+      userQuizzes[e].title,
+      userQuizzes[e].author,
+      userQuizzes[e].quiz,
+    ]);
+    setTake(!take);
+    console.log(take);
+  };
+
   if (!myQ) return null;
   return (
     <div className="flex-1 flex flex-col items-center">
@@ -71,6 +84,7 @@ function MyQuiz({ myQ }) {
       </div>
       <Login
         fetchQuizzes={fetchQuizzes}
+        userQuizzes={userQuizzes}
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
         logPop={logPop}
@@ -82,11 +96,15 @@ function MyQuiz({ myQ }) {
           Login to create quizzes
         </div>
       )}
-      {!newPop && (
+      <TakeQuiz take={take} setTake={setTake} selectedQuiz={selectedQuiz} />
+      {!newPop && !take && (
         <div className="w-full ">
           {userQuizzes.map((quiz, index) => (
             <div key={index} className="text-white">
-              <button className=" border-solid w-11/12 rounded-lg my-2  bg-green-400 border-8 border-white-100 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom">
+              <button
+                onClick={() => takeQuizButton(index)}
+                className=" border-solid w-11/12 rounded-lg my-2  bg-green-400 border-8 border-white-100 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              >
                 {quiz.title}
               </button>
             </div>
