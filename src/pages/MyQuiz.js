@@ -62,26 +62,28 @@ function MyQuiz({ myQ }) {
 
   if (!myQ) return null;
   return (
-    <div className="flex-1 flex flex-col items-center">
-      <div className=" flex flex-col">
-        <button
-          onClick={loginClick}
-          className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
-        >
-          {isLoggedIn ? "Logout" : "Login"}
-        </button>
-        {isLoggedIn && (
-          <>
-            {" "}
-            <button
-              onClick={newClick}
-              className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
-            >
-              Create New Quiz
-            </button>
-          </>
-        )}
-      </div>
+    <div className="flex-1 flex flex-col items-center ">
+      {!newPop && !take && (
+        <div className=" flex flex-col">
+          <button
+            onClick={loginClick}
+            className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          >
+            {isLoggedIn ? "Logout" : "Login"}
+          </button>
+          {isLoggedIn && (
+            <>
+              {" "}
+              <button
+                onClick={newClick}
+                className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              >
+                Create New Quiz
+              </button>
+            </>
+          )}
+        </div>
+      )}
       <Login
         fetchQuizzes={fetchQuizzes}
         userQuizzes={userQuizzes}

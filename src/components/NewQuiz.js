@@ -229,6 +229,7 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
           </div>
         </>
       )}
+      <br />
       <button
         onClick={closeButton}
         className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
