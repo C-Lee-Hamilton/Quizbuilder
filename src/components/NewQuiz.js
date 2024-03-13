@@ -18,10 +18,24 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
 
   const titleClick = () => {
     title === "" ? setIsTitleSet(false) : setIsTitleSet(true);
+    if (title === "") {
+      setIsTitleSet(false);
+      setErrMsg("Error: Create Title");
+    } else {
+      setIsTitleSet(true);
+      setErrMsg("");
+    }
   };
 
   const createQuestion = () => {
-    if (qInput !== "") {
+    if (
+      qInput !== "" &&
+      a1Input !== "" &&
+      a2Input !== "" &&
+      a3Input !== "" &&
+      a4Input !== "" &&
+      answer !== ""
+    ) {
       setQArray([
         ...qArray,
         {
@@ -41,13 +55,20 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
       setA4Input("");
       setErrMsg("");
     } else {
-      setErrMsg("missing question");
+      setErrMsg("Error: Missing Items");
     }
 
     console.log(qArray);
   };
   const saveQuestion = () => {
-    if (qInput !== "") {
+    if (
+      qInput !== "" &&
+      a1Input !== "" &&
+      a2Input !== "" &&
+      a3Input !== "" &&
+      a4Input !== "" &&
+      answer !== ""
+    ) {
       setQArray([
         ...qArray,
         {
@@ -62,7 +83,7 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
       setIsSaved(true);
       setErrMsg("");
     } else {
-      setErrMsg("missing question");
+      setErrMsg("Error: Missing Items");
     }
 
     console.log(qArray);
@@ -110,7 +131,8 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
 
   if (!newPop) return null;
   return (
-    <div className="  overflow-hidden  text-green-500 bg-green-500 border-4 border-white-500  text-white rounded-lg shadow-custom w-11/12 flex-1  mb-2">
+    <div className="  overflow-hidden  text-green-500 bg-green-500 border-4 border-white-500  text-white rounded-lg shadow-custom w-11/12 flex-1 mt-2 mb-2">
+      {errMsg}
       {!isTitleSet && (
         <>
           <input
@@ -120,6 +142,7 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
             placeholder="enter quiz name"
             className="mx-auto w-3/4 text-center text-green-500 text-lg rounded-lg my-2 shadow-custom"
           />
+
           <button
             onClick={titleClick}
             className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
@@ -131,7 +154,6 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
 
       {isTitleSet && (
         <>
-          {errMsg}
           <input
             value={qInput}
             onChange={(e) => setQInput(e.target.value)}
@@ -170,28 +192,44 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
           <h1 className="text-white">Correct Answer:{answer}</h1>
           <div className="w-3/4 mx-auto">
             <button
-              className=" border-2  w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              className={` ${
+                answer === "A"
+                  ? "bg-white text-green-500 bg-opacity-100 border-green-500"
+                  : "bg-green-500 text-white "
+              } border-2 mx-1 w-1/5 text-2xl rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
               id="A"
               onClick={(e) => setAnswer(e.target.id)}
             >
               A
             </button>
             <button
-              className=" border-2  w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              className={` ${
+                answer === "B"
+                  ? "bg-white text-green-500 bg-opacity-100 border-green-500"
+                  : "bg-green-500 text-white "
+              } border-2 mx-1 w-1/5 text-2xl rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
               id="B"
               onClick={(e) => setAnswer(e.target.id)}
             >
               B
             </button>
             <button
-              className=" border-2  w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              className={` ${
+                answer === "C"
+                  ? "bg-white text-green-500 bg-opacity-100 border-green-500"
+                  : "bg-green-500 text-white "
+              } border-2 mx-1 w-1/5 text-2xl rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
               id="C"
               onClick={(e) => setAnswer(e.target.id)}
             >
               C
             </button>
             <button
-              className=" border-2  w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              className={` ${
+                answer === "D"
+                  ? "bg-white text-green-500 bg-opacity-100 border-green-500"
+                  : "bg-green-500 text-white "
+              } border-2 mx-1 w-1/5 text-2xl rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
               id="D"
               onClick={(e) => setAnswer(e.target.id)}
             >

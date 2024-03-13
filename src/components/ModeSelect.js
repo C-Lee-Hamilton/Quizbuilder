@@ -43,25 +43,36 @@ function ModeSelect() {
       <div>
         <button
           onClick={popClick}
-          className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          className={` ${
+            pop
+              ? "bg-white text-green-500 bg-opacity-100 "
+              : "bg-green-500 text-white bg-opacity-50"
+          }  px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
         >
           Popular
         </button>
         <button
           onClick={myClick}
-          className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1  bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          className={` ${
+            myQ
+              ? "bg-white text-green-500 bg-opacity-100 "
+              : "bg-green-500 text-white bg-opacity-50"
+          } px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1   rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
         >
           My Quizzes
         </button>
         <button
           onClick={searchClick}
-          className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          className={` ${
+            searchPg
+              ? "bg-white text-green-500 bg-opacity-100 "
+              : "bg-green-500 text-white bg-opacity-50"
+          } px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1  rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
         >
           Search
         </button>
       </div>
       <div className=" sm:text-2xl md:text-3xl border-solid flex flex-col mx-auto mb-5 flex-1 overflow-hidden rounded-lg  border-4  border-white-500 border-opacity-50 bg-green-500 bg-opacity-50 text-shadow-dark text-white w-11/12 ">
-        {dispTxt}
         <Popular pop={pop} />
         <MyQuiz myQ={myQ} />
         <Search searchPg={searchPg} />
