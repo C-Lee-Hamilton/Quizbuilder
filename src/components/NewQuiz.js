@@ -189,7 +189,7 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
             type="text"
             className="mx-auto w-3/4 my-1 text-green-500 text-center"
           />
-          <h1 className="text-white">Correct Answer:{answer}</h1>
+
           <div className="w-3/4 mx-auto">
             <button
               className={` ${

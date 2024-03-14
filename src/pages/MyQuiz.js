@@ -4,47 +4,15 @@ import axios from "axios";
 import Login from "../components/LoginPopup";
 import NewQuiz from "../components/NewQuiz";
 import TakeQuiz from "../components/TakeQuiz";
-function MyQuiz({ myQ }) {
-  const [logPop, setLogPop] = useState(false);
+import EditQuiz from "../components/EditQuiz";
+function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
   const [newPop, setNewPop] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [take, setTake] = useState(false);
+  const [editor, setEditor] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState([]);
 
-  const [userQuizzes, setUserQuizzes] = useState([]);
   const { setToken, token, username } = usePageContext("");
-
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:5000/Auth/logout");
-      setToken("");
-      setIsLoggedIn(false);
-      setUserQuizzes([]);
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
-  const fetchQuizzes = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/auth/my-quiz", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: { username },
-      });
-      setUserQuizzes(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching quizzes:", error);
-    }
-  };
-
-  const loginClick = () => {
-    if (!isLoggedIn) {
-      setLogPop(!logPop);
-    } else handleLogout();
-  };
 
   const newClick = () => {
     setNewPop(!newPop);
@@ -60,17 +28,15 @@ function MyQuiz({ myQ }) {
     console.log(take);
   };
 
+  const editButton = () => {
+    setEditor(true);
+  };
+
   if (!myQ) return null;
   return (
     <div className="flex-1 flex flex-col items-center ">
-      {!newPop && !take && (
+      {!newPop && !take && !editor && (
         <div className=" flex flex-col">
-          <button
-            onClick={loginClick}
-            className="px-4 py-2 border-2 lg:text-3xl sm:text-sm sm:mx-1 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
-          >
-            {isLoggedIn ? "Logout" : "Login"}
-          </button>
           {isLoggedIn && (
             <>
               {" "}
@@ -84,14 +50,6 @@ function MyQuiz({ myQ }) {
           )}
         </div>
       )}
-      <Login
-        fetchQuizzes={fetchQuizzes}
-        userQuizzes={userQuizzes}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
-        logPop={logPop}
-        setLogPop={setLogPop}
-      />
 
       {!isLoggedIn && (
         <div className="sm:text-2xl md:text-3xl mx-auto text-shadow-dark text-white w-11/12 ">
@@ -105,15 +63,22 @@ function MyQuiz({ myQ }) {
             <div key={index} className="text-white">
               <button
                 onClick={() => takeQuizButton(index)}
-                className=" border-solid w-11/12 rounded-lg my-2  bg-green-400 border-8 border-white-100 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+                className=" border-solid w-9/12 rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
               >
                 {quiz.title}
+              </button>
+              <button className=" border-solid px-1 rounded-lg my-2 text-lg text-green-500 bg-white border-2 border-white-100 hover:bg-green-500 hover:text-white active:scale-95 shadow-custom">
+                edit
               </button>
             </div>
           ))}
         </div>
       )}
-
+      <EditQuiz
+        editor={editor}
+        setEditor={setEditor}
+        selectedQuiz={selectedQuiz}
+      />
       <NewQuiz
         newPop={newPop}
         setNewPop={setNewPop}

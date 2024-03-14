@@ -39,7 +39,7 @@ function TakeQuiz({ take, setTake, selectedQuiz }) {
         setPoints(points + 1);
       } else setPoints(points);
       setChoice(" ");
-      setErr(" ");
+      setErr("");
     } else setErr("Please Select An Answer");
   };
 
