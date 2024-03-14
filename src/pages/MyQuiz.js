@@ -1,7 +1,6 @@
 import { React, useState } from "react";
 import { usePageContext } from "../PageContext";
-import axios from "axios";
-import Login from "../components/LoginPopup";
+
 import NewQuiz from "../components/NewQuiz";
 import TakeQuiz from "../components/TakeQuiz";
 import EditQuiz from "../components/EditQuiz";
@@ -28,7 +27,12 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
     console.log(take);
   };
 
-  const editButton = () => {
+  const editButton = (e) => {
+    setSelectedQuiz([
+      userQuizzes[e].title,
+      userQuizzes[e].author,
+      userQuizzes[e].quiz,
+    ]);
     setEditor(true);
   };
 
@@ -57,7 +61,7 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
         </div>
       )}
       <TakeQuiz take={take} setTake={setTake} selectedQuiz={selectedQuiz} />
-      {!newPop && !take && (
+      {!newPop && !take && !editor && (
         <div className="w-full ">
           {userQuizzes.map((quiz, index) => (
             <div key={index} className="text-white">
@@ -67,7 +71,10 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
               >
                 {quiz.title}
               </button>
-              <button className=" border-solid px-1 rounded-lg my-2 text-lg text-green-500 bg-white border-2 border-white-100 hover:bg-green-500 hover:text-white active:scale-95 shadow-custom">
+              <button
+                onClick={() => editButton(index)}
+                className=" border-solid px-1 rounded-lg my-2 text-lg text-green-500 bg-white border-2 border-white-100 hover:bg-green-500 hover:text-white active:scale-95 shadow-custom"
+              >
                 edit
               </button>
             </div>

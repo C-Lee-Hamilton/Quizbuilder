@@ -65,14 +65,14 @@ function LoginPopup({
             <>
               <span className="text-xl my-2 text-shadow-dark">Login</span>
               <input
-                className="text-black w-full px-4 py-2 text-xl font-bold border-4 border-grey-400 text-center rounded-lg my-2 shadow-custom"
+                className=" w-full text-green-500 px-4 py-2 text-xl font-bold border-4 border-grey-400 text-center rounded-lg my-2 shadow-custom"
                 type="text"
                 placeholder="username"
                 onChange={(event) => setUserLogin(event.target.value)}
                 value={userLogin}
               />
               <input
-                className="text-black w-full px-4 py-2 text-xl font-bold border-4 border-grey-400 text-center rounded-lg my-4 shadow-custom"
+                className="text-green-500 w-full px-4 py-2 text-xl font-bold border-4 border-grey-400 text-center rounded-lg my-4 shadow-custom"
                 type="password"
                 placeholder="password"
                 onChange={(event) => setPassLogin(event.target.value)}

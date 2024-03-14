@@ -4,9 +4,10 @@ import { usePageContext } from "../PageContext";
 
 function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
   const [qArray, setQArray] = useState([]);
+  const [isSaved, setIsSaved] = useState(false);
   const [isTitleSet, setIsTitleSet] = useState(false);
   const [title, setTitle] = useState("");
-  const [isSaved, setIsSaved] = useState(false);
+
   const [qInput, setQInput] = useState("");
   const [a1Input, setA1Input] = useState("");
   const [a2Input, setA2Input] = useState("");

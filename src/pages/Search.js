@@ -6,11 +6,11 @@ function Search({ searchPg }) {
 
   if (!searchPg) return null;
   return (
-    <div className="flex-1 ">
+    <div className="flex-1  ">
       <input
         type="text"
         placeholder="Search by Title"
-        className="w-1/2 text-center mx-auto mb-1"
+        className="rounded-lg w-1/2 mt-2 text-lg text-center mx-auto mb-1"
         onChange={(event) => setTitle(event.target.value) & setTag("")}
         value={title}
       ></input>
@@ -18,7 +18,7 @@ function Search({ searchPg }) {
       <input
         type="text"
         placeholder="Search by Tag"
-        className="w-1/2 text-center mx-auto"
+        className="rounded-lg w-1/2 text-lg text-center mx-auto mb-2"
         onChange={(event) => setTag(event.target.value) & setTitle("")}
         value={tag}
       ></input>
