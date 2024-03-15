@@ -63,7 +63,12 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
           Login to create quizzes
         </div>
       )}
-      <TakeQuiz take={take} setTake={setTake} selectedQuiz={selectedQuiz} />
+      <TakeQuiz
+        take={take}
+        setTake={setTake}
+        selectedQuiz={selectedQuiz}
+        Mode="Mine"
+      />
       {!newPop && !take && !editor && (
         <div className="w-full ">
           {userQuizzes.map((quiz, index) => (

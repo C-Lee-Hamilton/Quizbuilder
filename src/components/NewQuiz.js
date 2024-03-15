@@ -96,6 +96,7 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
         title: title,
         qArray: qArray,
         username: username,
+        views: 0,
       });
 
       if (response.data.success) {

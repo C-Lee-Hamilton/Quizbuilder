@@ -1,6 +1,6 @@
 import { React, useState } from "react";
-
-function TakeQuiz({ take, setTake, selectedQuiz }) {
+import axios from "axios";
+function TakeQuiz({ take, setTake, selectedQuiz, Mode, viewAmt, setViewAmt }) {
   const [started, setStarted] = useState(false);
   const [scoreScreen, setScoreScreen] = useState(false);
   const [tracker, setTracker] = useState(0);
@@ -10,10 +10,31 @@ function TakeQuiz({ take, setTake, selectedQuiz }) {
   const [points, setPoints] = useState(0);
   const totalScore = (points / choices.length) * 100;
   const [Err, setErr] = useState("");
+  const [newView, setNewView] = useState(0);
+  const tester = () => {
+    console.log(viewAmt + 1);
+    setNewView(viewAmt + 1);
+    console.log(newView);
+  };
 
+  const addViews = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/Users/add-view",
+        {
+          newViews: viewAmt + 1,
+          quizId: selectedQuiz[3],
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
+  };
   const close = () => {
     setStarted(false);
+
     setTake(false);
+
     setScoreScreen(false);
     setPoints(0);
     setChoices([]);
@@ -26,10 +47,24 @@ function TakeQuiz({ take, setTake, selectedQuiz }) {
     if (choice !== " ") {
       var t = selectedQuiz[2].length - 1;
       if (tracker === t) {
-        setChoices([...choices, choice]);
-        setCorrectAnswers([...correctAnswers, selectedQuiz[2][tracker].Answer]);
-        setTracker(0);
-        setScoreScreen(true);
+        if (Mode === "Mine") {
+          setChoices([...choices, choice]);
+          setCorrectAnswers([
+            ...correctAnswers,
+            selectedQuiz[2][tracker].Answer,
+          ]);
+          setTracker(0);
+          setScoreScreen(true);
+        } else if (Mode === "Pop") {
+          setChoices([...choices, choice]);
+          setCorrectAnswers([
+            ...correctAnswers,
+            selectedQuiz[2][tracker].Answer,
+          ]);
+          addViews();
+          setTracker(0);
+          setScoreScreen(true);
+        }
       } else {
         setTracker(tracker + 1);
         setChoices([...choices, choice]);
@@ -49,6 +84,7 @@ function TakeQuiz({ take, setTake, selectedQuiz }) {
       {Err}
       {!started && (
         <div>
+          <button onClick={tester}>tester</button>
           <h1 className="mx-auto w-3/4 text-center text-green-500 bg-green-500 text-lg border-solid border-2 border-white-500 text-white rounded-lg my-2 shadow-custom">
             {selectedQuiz[0]}
           </h1>

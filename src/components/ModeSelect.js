@@ -14,20 +14,8 @@ function ModeSelect() {
   const [logPop, setLogPop] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userQuizzes, setUserQuizzes] = useState([]);
+  const [popQuizzes, setPopQuizzes] = useState([]);
   const { setToken, token, username } = usePageContext("");
-
-  useEffect(() => {
-    const textCheck = () => {
-      if (pop) {
-        setDispTxt("Popular");
-      } else if (myQ) {
-        setDispTxt("My Quizzes");
-      } else if (searchPg) {
-        setDispTxt("Search");
-      }
-    };
-    textCheck();
-  }, [pop, myQ, searchPg, dispTxt]);
 
   const handleLogout = async () => {
     try {
@@ -58,11 +46,21 @@ function ModeSelect() {
       console.error("Error fetching quizzes:", error);
     }
   };
+  const fetchPopQuizzes = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/auth/pop-quiz");
+      setPopQuizzes(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
+  };
 
   const popClick = () => {
     setPop(true);
     setMyQ(false);
     setSearchPg(false);
+    fetchPopQuizzes();
   };
   const myClick = () => {
     setPop(false);
@@ -124,7 +122,7 @@ function ModeSelect() {
         </button>
       </div>
       <div className=" sm:text-2xl md:text-3xl border-solid flex flex-col mx-auto mb-5 flex-1 overflow-hidden rounded-lg  border-4  border-white-500 border-opacity-50 bg-green-500 bg-opacity-50 text-shadow-dark text-white w-11/12 ">
-        <Popular pop={pop} />
+        <Popular pop={pop} popQuizzes={popQuizzes} />
         <MyQuiz
           myQ={myQ}
           isLoggedIn={isLoggedIn}
