@@ -9,9 +9,8 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
 
   const [take, setTake] = useState(false);
   const [editor, setEditor] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState([]);
 
-  const { setToken, token, username } = usePageContext("");
+  const [selectedQuiz, setSelectedQuiz] = useState([]);
 
   const newClick = () => {
     setNewPop(!newPop);
@@ -22,7 +21,9 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
       userQuizzes[e].title,
       userQuizzes[e].author,
       userQuizzes[e].quiz,
+      userQuizzes[e]._id,
     ]);
+
     setTake(!take);
     console.log(take);
   };
@@ -32,7 +33,9 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
       userQuizzes[e].title,
       userQuizzes[e].author,
       userQuizzes[e].quiz,
+      userQuizzes[e]._id,
     ]);
+
     setEditor(true);
   };
 

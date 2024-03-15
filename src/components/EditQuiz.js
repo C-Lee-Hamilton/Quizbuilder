@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-
+import axios from "axios";
 function EditQuiz({ editor, setEditor, selectedQuiz }) {
   const [selectedQ, setSelectedQ] = useState([]);
   const [qInput, setQInput] = useState("");
@@ -7,9 +7,11 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
   const [a2Input, setA2Input] = useState("");
   const [a3Input, setA3Input] = useState("");
   const [a4Input, setA4Input] = useState("");
+  const [title, setTitle] = useState();
   const [answer, setAnswer] = useState("");
   const [tracker, setTracker] = useState(0);
   const [qPop, setQPop] = useState(false);
+  const [qIndex, setQIndex] = useState();
   const [isTitleEdit, setIsTitleEdit] = useState(false);
 
   const closeButton = () => {
@@ -18,21 +20,67 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
     setIsTitleEdit(false);
   };
   const tester = () => {
-    console.log(selectedQuiz[2][0].Question);
-    setSelectedQ(selectedQuiz[2]);
+    // console.log(selectedQuiz[0]);
+    // setSelectedQ(selectedQuiz[2]);
+    console.log(qIndex);
   };
   const editQuestion = (e) => {
     setQPop(true);
     setSelectedQ(selectedQuiz[2][e]);
     setAnswer(selectedQuiz[2][e].Answer);
+    setTitle(selectedQuiz[0]);
+    setA1Input(selectedQuiz[2][e].A);
+    setA2Input(selectedQuiz[2][e].B);
+    setA3Input(selectedQuiz[2][e].C);
+    setA4Input(selectedQuiz[2][e].D);
+    setQIndex(e);
   };
   const closeQuestion = () => {
     setQPop(false);
   };
+
+  const saveTitle = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/Users/edit-quiz-title",
+        {
+          newTitle: title,
+          quizId: selectedQuiz[3],
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
+  };
+  const saveQuestion = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/Auth/edit-question",
+        {
+          quizId: selectedQuiz[3],
+          newData: {
+            Question: qInput,
+            A: a1Input,
+            B: a2Input,
+            C: a3Input,
+            D: a4Input,
+            Answer: answer,
+          },
+          questionIndex: qIndex,
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
+  };
+
   const editTitle = () => {
     if (!isTitleEdit) {
       setIsTitleEdit(true);
-    } else setIsTitleEdit(false);
+    } else {
+      saveTitle();
+      setIsTitleEdit(false);
+    }
   };
   if (!editor) return null;
   return (
@@ -41,12 +89,11 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
         <>
           {!isTitleEdit && (
             <>
-              {" "}
               <input
                 type="text"
-                readonly
-                value={"title: " + selectedQuiz[0]}
-                className=" hover:cursor-default  text-center placeholder-color-white border-solid  w-9/12 rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 shadow-custom"
+                placeholder={selectedQuiz[0]}
+                value={title}
+                className=" hover:cursor-default placeholder-white text-center  border-solid  w-9/12 rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 shadow-custom"
               />
             </>
           )}
@@ -56,6 +103,8 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
                 className="text-center text-green-500 w-9/12 mx-2 border-2 rounded-lg mt-2"
                 type="text"
                 placeholder={selectedQuiz[0]}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
             </>
           )}
@@ -79,8 +128,15 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
             </div>
           ))}
           <button
+            onClick={tester}
+            className=" border-2 w-2/3 text-xl bg-green-500 bg-opacity-50 text-white rounded-lg mt-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          >
+            Delete Quiz
+          </button>
+          <br />
+          <button
             onClick={closeButton}
-            className=" border-2 w-1/3 text-xl bg-green-500 bg-opacity-50 text-white rounded-lg my-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+            className=" border-2 w-2/3 text-xl bg-green-500 bg-opacity-50 text-white rounded-lg mt-2 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
           >
             Close
           </button>
@@ -173,25 +229,28 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
           </div>
 
           <div className="relative flex flex-col justify-center items-center">
-            <button className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom">
+            <button
+              onClick={saveQuestion}
+              className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+            >
               Save
             </button>
           </div>
+          <button
+            onClick={tester}
+            className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          >
+            Delete Question
+          </button>
           <button
             onClick={closeQuestion}
             className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
           >
             Close
           </button>
+          <button onClick={tester}>tester</button>
         </>
       )}
-      {/* <button
-        onClick={tester}
-        className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
-      >
-        tester
-      </button> */}
-      <br />
     </div>
   );
 }
