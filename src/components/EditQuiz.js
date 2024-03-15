@@ -13,7 +13,30 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
   const [qPop, setQPop] = useState(false);
   const [qIndex, setQIndex] = useState();
   const [isTitleEdit, setIsTitleEdit] = useState(false);
+  const [addQ, setAddQ] = useState(false);
+  const [newQ, setNewQ] = useState();
 
+  const addQuestion = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/Users/add-question",
+        {
+          Question: qInput,
+          A: a1Input,
+          B: a2Input,
+          C: a3Input,
+          D: a4Input,
+          Answer: answer,
+          quizIndex: selectedQuiz[3],
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
+  };
+  const viewAddQ = () => {
+    setAddQ(!addQ);
+  };
   const closeButton = () => {
     setTracker(0);
     setEditor(false);
@@ -22,6 +45,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
   const tester = () => {
     // console.log(selectedQuiz[0]);
     // setSelectedQ(selectedQuiz[2]);
+    // console.log(selectedQuiz[3]);
     console.log(qIndex);
   };
   const editQuestion = (e) => {
@@ -50,6 +74,30 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
       );
     } catch (error) {
       console.error("Error fetching quizzes:", error);
+    }
+  };
+  const deleteQuestion = async () => {
+    try {
+      await axios.delete("http://localhost:5000/Users/delete-question", {
+        data: {
+          quizId: selectedQuiz[3],
+          questionIndex: qIndex,
+        },
+      });
+    } catch (error) {
+      console.error("Error deleting question:", error);
+    }
+  };
+  const deleteQuiz = async () => {
+    try {
+      axios.delete("http://localhost:5000/Users/delete-quiz", {
+        data: {
+          quizId: selectedQuiz[3],
+        },
+      });
+      console.log("success");
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
     }
   };
   const saveQuestion = async () => {
@@ -85,8 +133,9 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
   if (!editor) return null;
   return (
     <div className="  overflow-hidden  text-green-500 bg-green-500 border-4 border-white-500  text-white rounded-lg shadow-custom w-11/12 flex-1 mt-2 mb-2">
-      {!qPop && (
+      {!qPop && !addQ && (
         <>
+          <button onClick={viewAddQ}>editTester</button>
           {!isTitleEdit && (
             <>
               <input
@@ -128,7 +177,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
             </div>
           ))}
           <button
-            onClick={tester}
+            onClick={deleteQuiz}
             className=" border-2 w-2/3 text-xl bg-green-500 bg-opacity-50 text-white rounded-lg mt-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
           >
             Delete Quiz
@@ -143,7 +192,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
         </>
       )}
 
-      {qPop && (
+      {(qPop || addQ) && (
         <>
           <input
             value={qInput}
@@ -228,27 +277,33 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
             </button>
           </div>
 
-          <div className="relative flex flex-col justify-center items-center">
+          <>
+            <div className="relative flex flex-col justify-center items-center">
+              <button
+                onClick={qPop ? saveQuestion : addQuestion}
+                className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              >
+                {qPop ? "Save" : "Add Question"}
+              </button>
+            </div>
+            {qPop && (
+              <>
+                <button
+                  onClick={deleteQuestion}
+                  className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+                >
+                  Delete Question
+                </button>
+              </>
+            )}
+
             <button
-              onClick={saveQuestion}
+              onClick={qPop ? closeQuestion : viewAddQ}
               className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
             >
-              Save
+              back
             </button>
-          </div>
-          <button
-            onClick={tester}
-            className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
-          >
-            Delete Question
-          </button>
-          <button
-            onClick={closeQuestion}
-            className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
-          >
-            Close
-          </button>
-          <button onClick={tester}>tester</button>
+          </>
         </>
       )}
     </div>
