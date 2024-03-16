@@ -26,6 +26,7 @@ function TakeQuiz({ take, setTake, selectedQuiz, Mode, viewAmt, setViewAmt }) {
           quizId: selectedQuiz[3],
         }
       );
+      console.log(response);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
@@ -56,6 +57,15 @@ function TakeQuiz({ take, setTake, selectedQuiz, Mode, viewAmt, setViewAmt }) {
           setTracker(0);
           setScoreScreen(true);
         } else if (Mode === "Pop") {
+          setChoices([...choices, choice]);
+          setCorrectAnswers([
+            ...correctAnswers,
+            selectedQuiz[2][tracker].Answer,
+          ]);
+          addViews();
+          setTracker(0);
+          setScoreScreen(true);
+        } else if (Mode === "Search") {
           setChoices([...choices, choice]);
           setCorrectAnswers([
             ...correctAnswers,

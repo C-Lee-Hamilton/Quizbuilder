@@ -15,7 +15,9 @@ function ModeSelect() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userQuizzes, setUserQuizzes] = useState([]);
   const [popQuizzes, setPopQuizzes] = useState([]);
+  // const [searchQuizzes, setSearchQuizzes] = useState([]);
   const { setToken, token, username } = usePageContext("");
+  const [title, setTitle] = useState("");
 
   const handleLogout = async () => {
     try {
@@ -55,7 +57,21 @@ function ModeSelect() {
       console.error("Error fetching quizzes:", error);
     }
   };
-
+  // const fetchTitleResults = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:5000/auth/search-title",
+  //       {
+  //         params: { title },
+  //       }
+  //     );
+  //     setSearchQuizzes(response.data);
+  //     console.log(response.data);
+  //     console.log(title);
+  //   } catch (error) {
+  //     console.error("Error fetching quizzes:", error);
+  //   }
+  // };
   const popClick = () => {
     setPop(true);
     setMyQ(false);
@@ -71,30 +87,39 @@ function ModeSelect() {
     setPop(false);
     setMyQ(false);
     setSearchPg(true);
+    // fetchTitleResults();
   };
 
   return (
     <div className="border-solid relative mb-2 mt-2 flex flex-col items-center  overflow-hidden rounded-lg  border-0 flex-1 border-white-500 border-opacity-50 bg-green-500 bg-opacity-50  w-11/12 shadow-custom">
+      {/* <div className=" flex w-full justify-end mb-0">
+        <input
+          type="text"
+          placeholder="Search"
+          className="w-1/4 h-1/4 text-center mb-0 "
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
+      </div> */}
       <div className="w-full flex justify-between">
         <button
           onClick={loginClick}
-          className="px-2 py-0 border-2 justify-between lg:text-3xl sm:text-sm mx-2 bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          className="px-2 py-0 border-2 justify-between lg:text-3xl sm:text-sm mx-2 bg-green-500 bg-opacity-50 text-white rounded-lg my-2  lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
         >
           {isLoggedIn ? "Logout" : "Login"}
         </button>
 
-        <h1 className=" lg:text-5xl md:text-4xl sm:text-3xl text-white text-shadow-dark mb-2 mt-1">
+        <h1 className=" lg:text-5xl md:text-4xl sm:text-3xl text-white text-shadow-dark mb-0 mt-0">
           QuizBuilder
         </h1>
+
         <button
           onClick={searchClick}
-          className={` ${
-            searchPg
-              ? "bg-white text-green-500 bg-opacity-100 "
-              : "bg-green-500 text-white bg-opacity-50"
-          } px-2  py-0 border-2 lg:text-3xl sm:text-sm 
+          className=" px-2  py-0 border-2 lg:text-3xl sm:text-sm 
             rounded-lg my-2 mx-2
-           hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
+           hover:bg-white hover:text-green-500 bg-green-500 text-white bg-opacity-50 active:scale-95 shadow-custom "
         >
           Search
         </button>
@@ -129,7 +154,10 @@ function ModeSelect() {
           userQuizzes={userQuizzes}
           fetchQuizzes={fetchQuizzes}
         />
-        <Search searchPg={searchPg} />
+        <Search
+          searchPg={searchPg}
+          // searchQuizzes={searchQuizzes}
+        />
         <Login
           fetchQuizzes={fetchQuizzes}
           userQuizzes={userQuizzes}
