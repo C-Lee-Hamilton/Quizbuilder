@@ -4,42 +4,33 @@ import { usePageContext } from "../PageContext";
 import NewQuiz from "../components/NewQuiz";
 import TakeQuiz from "../components/TakeQuiz";
 import EditQuiz from "../components/EditQuiz";
-function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
+function MyQuiz({}) {
   const [newPop, setNewPop] = useState(false);
-
-  const [take, setTake] = useState(false);
   const [editor, setEditor] = useState(false);
 
-  const [selectedQuiz, setSelectedQuiz] = useState([]);
-
+  const {
+    fetchQuizzes,
+    isLoggedIn,
+    storedQuizzes,
+    formatQuizData,
+    selectedQuiz,
+    take,
+    setTake,
+  } = usePageContext("");
   const newClick = () => {
     setNewPop(!newPop);
   };
 
   const takeQuizButton = (e) => {
-    setSelectedQuiz([
-      userQuizzes[e].title,
-      userQuizzes[e].author,
-      userQuizzes[e].quiz,
-      userQuizzes[e]._id,
-    ]);
-
+    formatQuizData(e);
     setTake(!take);
-    console.log(take);
   };
 
   const editButton = (e) => {
-    setSelectedQuiz([
-      userQuizzes[e].title,
-      userQuizzes[e].author,
-      userQuizzes[e].quiz,
-      userQuizzes[e]._id,
-    ]);
-
+    formatQuizData(e);
     setEditor(true);
   };
 
-  if (!myQ) return null;
   return (
     <div className="flex-1 flex flex-col items-center ">
       {!newPop && !take && !editor && (
@@ -63,15 +54,10 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
           Login to create quizzes
         </div>
       )}
-      <TakeQuiz
-        take={take}
-        setTake={setTake}
-        selectedQuiz={selectedQuiz}
-        Mode="Mine"
-      />
+
       {!newPop && !take && !editor && (
         <div className="w-full ">
-          {userQuizzes.map((quiz, index) => (
+          {storedQuizzes.map((quiz, index) => (
             <div key={index} className="text-white">
               <button
                 onClick={() => takeQuizButton(index)}
@@ -89,6 +75,7 @@ function MyQuiz({ myQ, isLoggedIn, userQuizzes, fetchQuizzes }) {
           ))}
         </div>
       )}
+      <TakeQuiz Mode="Mine" />
       <EditQuiz
         editor={editor}
         setEditor={setEditor}

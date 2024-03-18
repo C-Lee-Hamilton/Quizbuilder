@@ -3,27 +3,27 @@ import { usePageContext } from "../PageContext";
 import CreateAccount from "./createAccount";
 import axios from "axios";
 
-function LoginPopup({
-  logPop,
-  setLogPop,
-  setIsLoggedIn,
-  isLoggedIn,
-  fetchQuizzes,
-  userQuizzes,
-}) {
+function LoginPopup({ logPop, setLogPop }) {
   const [userLogin, setUserLogin] = useState("");
   const [passLogin, setPassLogin] = useState("");
   const [create, setCreate] = useState(false);
   const [err, setErr] = useState("");
-  const { setToken } = usePageContext("");
-  const { setUsername } = usePageContext("");
   const [hasEffectRun, setHasEffectRun] = useState(false);
+  const {
+    setToken,
+    setUsername,
+    fetchQuizzes,
+    storedQuizzes,
+    isLoggedIn,
+    setIsLoggedIn,
+  } = usePageContext("");
+
   useEffect(() => {
-    if (isLoggedIn && userQuizzes.length === 0 && !hasEffectRun) {
+    if (isLoggedIn && storedQuizzes.length === 0 && !hasEffectRun) {
       fetchQuizzes();
       setHasEffectRun(true);
     }
-  }, [fetchQuizzes, isLoggedIn, hasEffectRun]);
+  }, [fetchQuizzes, isLoggedIn, hasEffectRun, storedQuizzes]);
 
   if (!logPop) return null;
 

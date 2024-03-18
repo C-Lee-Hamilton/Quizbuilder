@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 import TakeQuiz from "../components/TakeQuiz";
-function Search({ searchPg }) {
+import { usePageContext } from "../PageContext";
+function Search({}) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const [searchQuizzes, setSearchQuizzes] = useState([]);
-  const [selectedQuiz, setSelectedQuiz] = useState([]);
-  const [viewAmt, setViewAmt] = useState();
-  const [takeSearch, setTakeSearch] = useState(false);
+
+  const {
+    storedQuizzes,
+    setStoredQuizzes,
+    formatQuizData,
+    setViewAmt,
+    take,
+    setTake,
+  } = usePageContext("");
   const takeQuizButton = (e) => {
-    setSelectedQuiz([
-      searchQuizzes[e].title,
-      searchQuizzes[e].author,
-      searchQuizzes[e].quiz,
-      searchQuizzes[e]._id,
-      searchQuizzes[e].views,
-    ]);
-    setViewAmt(searchQuizzes[e].views);
-    setTakeSearch(!takeSearch);
+    formatQuizData(e);
+    setViewAmt(storedQuizzes[e].views);
+    setTake(!take);
   };
   const fetchTitleResults = async () => {
     try {
@@ -27,9 +27,7 @@ function Search({ searchPg }) {
           params: { title },
         }
       );
-      setSearchQuizzes(response.data);
-      console.log(response.data);
-      console.log(title);
+      setStoredQuizzes(response.data);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
@@ -42,17 +40,15 @@ function Search({ searchPg }) {
           params: { author },
         }
       );
-      setSearchQuizzes(response.data);
-      console.log(response.data);
-      console.log(author);
+      setStoredQuizzes(response.data);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
   };
-  if (!searchPg) return null;
+
   return (
     <div className="flex-1 flex flex-col items-center ">
-      {!takeSearch && (
+      {!take && (
         <>
           <input
             type="text"
@@ -82,7 +78,7 @@ function Search({ searchPg }) {
           </button>
 
           <div className="w-full ">
-            {searchQuizzes.map((quiz, index) => (
+            {storedQuizzes.map((quiz, index) => (
               <div key={index} className="text-white">
                 <button
                   onClick={() => takeQuizButton(index)}
@@ -95,14 +91,7 @@ function Search({ searchPg }) {
           </div>
         </>
       )}
-      <TakeQuiz
-        take={takeSearch}
-        setTake={setTakeSearch}
-        Mode="Search"
-        selectedQuiz={selectedQuiz}
-        viewAmt={viewAmt}
-        setViewAmt={setViewAmt}
-      />
+      <TakeQuiz Mode="Search" />
     </div>
   );
 }

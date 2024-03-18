@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import axios from "axios";
-function TakeQuiz({ take, setTake, selectedQuiz, Mode, viewAmt, setViewAmt }) {
+import { usePageContext } from "../PageContext";
+function TakeQuiz({ Mode }) {
   const [started, setStarted] = useState(false);
   const [scoreScreen, setScoreScreen] = useState(false);
   const [tracker, setTracker] = useState(0);
@@ -11,6 +12,9 @@ function TakeQuiz({ take, setTake, selectedQuiz, Mode, viewAmt, setViewAmt }) {
   const totalScore = (points / choices.length) * 100;
   const [Err, setErr] = useState("");
   const [newView, setNewView] = useState(0);
+
+  const { viewAmt, selectedQuiz, take, setTake } = usePageContext("");
+
   const tester = () => {
     console.log(viewAmt + 1);
     setNewView(viewAmt + 1);

@@ -9,12 +9,11 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
   const [a4Input, setA4Input] = useState("");
   const [title, setTitle] = useState();
   const [answer, setAnswer] = useState("");
-  const [tracker, setTracker] = useState(0);
+
   const [qPop, setQPop] = useState(false);
   const [qIndex, setQIndex] = useState();
   const [isTitleEdit, setIsTitleEdit] = useState(false);
   const [addQ, setAddQ] = useState(false);
-  const [newQ, setNewQ] = useState();
 
   const addQuestion = async () => {
     try {
@@ -38,16 +37,10 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
     setAddQ(!addQ);
   };
   const closeButton = () => {
-    setTracker(0);
     setEditor(false);
     setIsTitleEdit(false);
   };
-  const tester = () => {
-    // console.log(selectedQuiz[0]);
-    // setSelectedQ(selectedQuiz[2]);
-    // console.log(selectedQuiz[3]);
-    console.log(qIndex);
-  };
+
   const editQuestion = (e) => {
     setQPop(true);
     setSelectedQ(selectedQuiz[2][e]);
