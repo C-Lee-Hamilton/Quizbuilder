@@ -10,9 +10,8 @@ import TakeQuiz from "./pages/TakeQuiz";
 import EditQuiz from "./components/EditQuiz";
 import NewQuiz from "./components/NewQuiz";
 
-//break page context up
-//add colors, change color scheme, label things
 //refresh stuff last
+
 const router = createBrowserRouter([
   {
     path: "/",

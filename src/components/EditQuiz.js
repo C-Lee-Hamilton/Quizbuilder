@@ -14,8 +14,8 @@ function EditQuiz() {
   const [qPop, setQPop] = useState(false);
   const [qIndex, setQIndex] = useState();
   const [isTitleEdit, setIsTitleEdit] = useState(false);
-
-  const { title, setTitle, storedQuizzes } = usePageContext("");
+  const [title, setTitle] = useState("");
+  const { storedQuizzes } = usePageContext("");
   const navigate = useNavigate();
   const { quizId } = useParams();
   const selectedQuiz = storedQuizzes.find((quiz) => quiz._id === quizId);
@@ -55,7 +55,7 @@ function EditQuiz() {
     setQPop(true);
     setSelectedQ(selectedQuiz.quiz[e]);
     setAnswer(selectedQuiz.quiz[e].Answer);
-    setTitle(selectedQuiz.title);
+    // setTitle(selectedQuiz.title);
     setA1Input(selectedQuiz.quiz[e].A);
     setA2Input(selectedQuiz.quiz[e].B);
     setA3Input(selectedQuiz.quiz[e].C);
@@ -133,6 +133,7 @@ function EditQuiz() {
       setIsTitleEdit(true);
     } else {
       saveTitle();
+
       setIsTitleEdit(false);
     }
   };
@@ -147,7 +148,7 @@ function EditQuiz() {
             <>
               <input
                 type="text"
-                placeholder={selectedQuiz.title}
+                placeholder={title === "" ? selectedQuiz.title : title}
                 // value={selectedQuiz.title}
                 className=" hover:cursor-default placeholder-white text-center  border-solid  w-9/12 rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 shadow-custom"
               />
