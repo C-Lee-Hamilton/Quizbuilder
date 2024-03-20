@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const PageContext = createContext();
@@ -6,15 +6,32 @@ const PageContext = createContext();
 export const usePageContext = () => useContext(PageContext);
 
 export const PageProvider = ({ children }) => {
-  const [token, setToken] = useState();
+  const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [storedQuizzes, setStoredQuizzes] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState([]);
-  const [viewAmt, setViewAmt] = useState();
-  const [take, setTake] = useState(false);
-  const [title, setTitle] = useState("");
+
+  useEffect(() => {
+    const tokenData = window.localStorage.getItem("MY_Token");
+    const nameData = window.localStorage.getItem("MY_Name");
+
+    if (tokenData !== null) setToken(JSON.parse(tokenData));
+    if (nameData !== null) setUsername(JSON.parse(nameData));
+    console.log("Token data:", tokenData);
+    console.log("Name data:", nameData);
+    console.log(username);
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("MY_Token", JSON.stringify(token));
+    window.localStorage.setItem("MY_Name", JSON.stringify(username));
+  }, [token, username]);
+
+  useEffect(() => {
+    username !== "" ? setIsLoggedIn(true) : setIsLoggedIn(false);
+  }, [username]);
+
   const fetchQuizzes = async () => {
     try {
       const response = await axios.get("http://localhost:5000/auth/my-quiz", {
@@ -24,7 +41,6 @@ export const PageProvider = ({ children }) => {
         params: { username },
       });
       setStoredQuizzes(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
@@ -34,28 +50,10 @@ export const PageProvider = ({ children }) => {
     try {
       const response = await axios.get("http://localhost:5000/auth/pop-quiz");
       setStoredQuizzes(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
   };
-
-  // const formatQuizData = (e) => {
-  //   setSelectedQuiz([
-  //     storedQuizzes[e].title,
-  //     storedQuizzes[e].author,
-  //     storedQuizzes[e].quiz,
-  //     storedQuizzes[e]._id,
-  //     storedQuizzes[e].views,
-  //   ]);
-  //   setTitle(storedQuizzes[e].title);
-  // };
-
-  // const fetchQuiz = (id) => {
-  //   return [
-  //     storedQuizzes[id]
-  //   ];
-  // };
 
   return (
     <PageContext.Provider
@@ -70,15 +68,6 @@ export const PageProvider = ({ children }) => {
         fetchQuizzes,
         storedQuizzes,
         setStoredQuizzes,
-        // formatQuizData,
-        viewAmt,
-        setViewAmt,
-        take,
-        setTake,
-        selectedQuiz,
-        setSelectedQuiz,
-        title,
-        setTitle,
       }}
     >
       {children}

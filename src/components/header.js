@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 
 function Header({ logPop, setLogPop }) {
-  const { setToken, isLoggedIn, setIsLoggedIn, setStoredQuizzes } =
+  const { setToken, isLoggedIn, setIsLoggedIn, setStoredQuizzes, setUsername } =
     usePageContext("");
   const location = useLocation();
   const isActive = (path) => {
@@ -17,6 +17,10 @@ function Header({ logPop, setLogPop }) {
       setToken("");
       setIsLoggedIn(false);
       setStoredQuizzes([]);
+      setUsername("");
+      window.localStorage.setItem("MY_Token", "");
+      window.localStorage.setItem("MY_Name", "");
+      window.localStorage.setItem("MY_Logged_In", "false");
     } catch (error) {
       console.error("Error during logout:", error);
     }

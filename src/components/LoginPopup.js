@@ -48,6 +48,7 @@ function LoginPopup({ logPop, setLogPop }) {
 
       if (response.data.success) {
         setToken(response.data.token);
+        console.log(response.data.token);
         setUsername(userLogin);
         setLogPop(false);
         setErr("");
