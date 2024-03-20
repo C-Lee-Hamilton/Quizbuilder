@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import axios from "axios";
 import { usePageContext } from "../context/PageContext";
 import { useParams, useNavigate } from "react-router-dom";
+
 function EditQuiz() {
   const [selectedQ, setSelectedQ] = useState([]);
   const [qInput, setQInput] = useState("");
@@ -17,8 +18,11 @@ function EditQuiz() {
   const [title, setTitle] = useState("");
   const { storedQuizzes } = usePageContext("");
   const navigate = useNavigate();
+
   const { quizId } = useParams();
+
   const selectedQuiz = storedQuizzes.find((quiz) => quiz._id === quizId);
+
   const tester = () => {
     console.log(selectedQuiz);
   };
@@ -137,7 +141,9 @@ function EditQuiz() {
       setIsTitleEdit(false);
     }
   };
-
+  if (selectedQuiz === undefined) {
+    return null;
+  }
   return (
     <div className="  overflow-hidden  text-green-500 bg-green-500 border-4 border-white-500  text-white rounded-lg shadow-custom w-11/12 flex-1 mt-2 mb-2">
       {!qPop && !addQ && (

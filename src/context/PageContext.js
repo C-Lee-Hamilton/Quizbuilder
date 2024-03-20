@@ -15,18 +15,25 @@ export const PageProvider = ({ children }) => {
   useEffect(() => {
     const tokenData = window.localStorage.getItem("MY_Token");
     const nameData = window.localStorage.getItem("MY_Name");
-
+    const storedQuizzesData = window.localStorage.getItem("MY_Stored_Quizzes");
     if (tokenData !== null) setToken(JSON.parse(tokenData));
     if (nameData !== null) setUsername(JSON.parse(nameData));
+    if (storedQuizzesData !== null)
+      setStoredQuizzes(JSON.parse(storedQuizzesData));
+
     console.log("Token data:", tokenData);
     console.log("Name data:", nameData);
-    console.log(username);
+    console.log(storedQuizzesData);
   }, []);
 
   useEffect(() => {
     window.localStorage.setItem("MY_Token", JSON.stringify(token));
     window.localStorage.setItem("MY_Name", JSON.stringify(username));
-  }, [token, username]);
+    window.localStorage.setItem(
+      "MY_Stored_Quizzes",
+      JSON.stringify(storedQuizzes)
+    );
+  }, [token, username, storedQuizzes]);
 
   useEffect(() => {
     username !== "" ? setIsLoggedIn(true) : setIsLoggedIn(false);
