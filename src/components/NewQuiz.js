@@ -1,8 +1,8 @@
 import { React, useState } from "react";
 import axios from "axios";
-import { usePageContext } from "../PageContext";
-
-function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
+import { usePageContext } from "../context/PageContext";
+import { useNavigate } from "react-router-dom";
+function NewQuiz() {
   const [qArray, setQArray] = useState([]);
   const [isSaved, setIsSaved] = useState(false);
   const [isTitleSet, setIsTitleSet] = useState(false);
@@ -15,7 +15,8 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
   const [a4Input, setA4Input] = useState("");
   const [answer, setAnswer] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const { username } = usePageContext("");
+  const { username, fetchQuizzes } = usePageContext("");
+  const navigate = useNavigate();
 
   const titleClick = () => {
     title === "" ? setIsTitleSet(false) : setIsTitleSet(true);
@@ -102,7 +103,7 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
       if (response.data.success) {
         fetchQuizzes();
         setTitle("");
-        setNewPop(false);
+
         setAnswer("");
         setIsTitleSet("");
         setQInput("");
@@ -118,20 +119,6 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
     }
   };
 
-  const closeButton = () => {
-    setTitle("");
-    setNewPop(false);
-    setAnswer("");
-    setIsTitleSet("");
-    setQInput("");
-    setA1Input("");
-    setA2Input("");
-    setA3Input("");
-    setA4Input("");
-    setErrMsg("");
-  };
-
-  if (!newPop) return null;
   return (
     <div className="  overflow-hidden  text-green-500 bg-green-500 border-4 border-white-500  text-white rounded-lg shadow-custom w-11/12 flex-1 mt-2 mb-2">
       {errMsg}
@@ -271,7 +258,7 @@ function NewQuiz({ newPop, setNewPop, fetchQuizzes }) {
       )}
       <br />
       <button
-        onClick={closeButton}
+        onClick={() => navigate(-1)}
         className=" border-2 sm:w-3/4 md:w-1/2 lg:w-1/4 text-2xl bg-green-500 bg-opacity-50 text-white rounded-lg my-2 lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
       >
         Close

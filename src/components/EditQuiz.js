@@ -1,19 +1,27 @@
 import { React, useState } from "react";
 import axios from "axios";
-function EditQuiz({ editor, setEditor, selectedQuiz }) {
+import { usePageContext } from "../context/PageContext";
+import { useParams, useNavigate } from "react-router-dom";
+function EditQuiz() {
   const [selectedQ, setSelectedQ] = useState([]);
   const [qInput, setQInput] = useState("");
   const [a1Input, setA1Input] = useState("");
   const [a2Input, setA2Input] = useState("");
   const [a3Input, setA3Input] = useState("");
   const [a4Input, setA4Input] = useState("");
-  const [title, setTitle] = useState();
   const [answer, setAnswer] = useState("");
-
+  const [addQ, setAddQ] = useState(false);
   const [qPop, setQPop] = useState(false);
   const [qIndex, setQIndex] = useState();
   const [isTitleEdit, setIsTitleEdit] = useState(false);
-  const [addQ, setAddQ] = useState(false);
+
+  const { title, setTitle, storedQuizzes } = usePageContext("");
+  const navigate = useNavigate();
+  const { quizId } = useParams();
+  const selectedQuiz = storedQuizzes.find((quiz) => quiz._id === quizId);
+  const tester = () => {
+    console.log(selectedQuiz);
+  };
 
   const addQuestion = async () => {
     try {
@@ -26,9 +34,10 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
           C: a3Input,
           D: a4Input,
           Answer: answer,
-          quizIndex: selectedQuiz[3],
+          quizIndex: quizId,
         }
       );
+      setAddQ(false);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
@@ -36,20 +45,23 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
   const viewAddQ = () => {
     setAddQ(!addQ);
   };
-  const closeButton = () => {
-    setEditor(false);
-    setIsTitleEdit(false);
-  };
+  // const closeButton = () => {
+  //   setIsTitleEdit(false);
+
+  //   fetchQuizzes();
+  // };
 
   const editQuestion = (e) => {
     setQPop(true);
-    setSelectedQ(selectedQuiz[2][e]);
-    setAnswer(selectedQuiz[2][e].Answer);
-    setTitle(selectedQuiz[0]);
-    setA1Input(selectedQuiz[2][e].A);
-    setA2Input(selectedQuiz[2][e].B);
-    setA3Input(selectedQuiz[2][e].C);
-    setA4Input(selectedQuiz[2][e].D);
+    setSelectedQ(selectedQuiz.quiz[e]);
+    setAnswer(selectedQuiz.quiz[e].Answer);
+    setTitle(selectedQuiz.title);
+    setA1Input(selectedQuiz.quiz[e].A);
+    setA2Input(selectedQuiz.quiz[e].B);
+    setA3Input(selectedQuiz.quiz[e].C);
+    setA4Input(selectedQuiz.quiz[e].D);
+    setQInput(selectedQuiz.quiz[e].title);
+
     setQIndex(e);
   };
   const closeQuestion = () => {
@@ -62,7 +74,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
         "http://localhost:5000/Users/edit-quiz-title",
         {
           newTitle: title,
-          quizId: selectedQuiz[3],
+          quizId: quizId,
         }
       );
     } catch (error) {
@@ -73,7 +85,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
     try {
       await axios.delete("http://localhost:5000/Users/delete-question", {
         data: {
-          quizId: selectedQuiz[3],
+          quizId: quizId,
           questionIndex: qIndex,
         },
       });
@@ -85,7 +97,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
     try {
       axios.delete("http://localhost:5000/Users/delete-quiz", {
         data: {
-          quizId: selectedQuiz[3],
+          quizId: quizId,
         },
       });
       console.log("success");
@@ -98,7 +110,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
       const response = await axios.post(
         "http://localhost:5000/Auth/edit-question",
         {
-          quizId: selectedQuiz[3],
+          quizId: quizId,
           newData: {
             Question: qInput,
             A: a1Input,
@@ -110,6 +122,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
           questionIndex: qIndex,
         }
       );
+      setQPop(false);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
@@ -123,18 +136,19 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
       setIsTitleEdit(false);
     }
   };
-  if (!editor) return null;
+
   return (
     <div className="  overflow-hidden  text-green-500 bg-green-500 border-4 border-white-500  text-white rounded-lg shadow-custom w-11/12 flex-1 mt-2 mb-2">
       {!qPop && !addQ && (
         <>
-          <button onClick={viewAddQ}>editTester</button>
+          <button onClick={tester}>tester</button>
+          Quiz Name
           {!isTitleEdit && (
             <>
               <input
                 type="text"
-                placeholder={selectedQuiz[0]}
-                value={title}
+                placeholder={selectedQuiz.title}
+                // value={selectedQuiz.title}
                 className=" hover:cursor-default placeholder-white text-center  border-solid  w-9/12 rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 shadow-custom"
               />
             </>
@@ -144,7 +158,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
               <input
                 className="text-center text-green-500 w-9/12 mx-2 border-2 rounded-lg mt-2"
                 type="text"
-                placeholder={selectedQuiz[0]}
+                placeholder={selectedQuiz.title}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
@@ -156,7 +170,8 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
           >
             {isTitleEdit ? "Save" : "Edit"}
           </button>
-          {selectedQuiz[2].map((quest, index) => (
+          Questions
+          {selectedQuiz.quiz.map((quest, index) => (
             <div key={index} className="text-white">
               <button className="hover:cursor-default border-solid w-9/12 rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 shadow-custom">
                 {quest.Question}
@@ -170,6 +185,12 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
             </div>
           ))}
           <button
+            onClick={viewAddQ}
+            className=" border-2 w-2/3 text-xl bg-green-500 bg-opacity-50 text-white rounded-lg mt-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          >
+            Add Question
+          </button>
+          <button
             onClick={deleteQuiz}
             className=" border-2 w-2/3 text-xl bg-green-500 bg-opacity-50 text-white rounded-lg mt-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
           >
@@ -177,7 +198,7 @@ function EditQuiz({ editor, setEditor, selectedQuiz }) {
           </button>
           <br />
           <button
-            onClick={closeButton}
+            onClick={() => navigate(-1)}
             className=" border-2 w-2/3 text-xl bg-green-500 bg-opacity-50 text-white rounded-lg mt-2 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
           >
             Close

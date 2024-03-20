@@ -14,6 +14,7 @@ export const PageProvider = ({ children }) => {
   const [selectedQuiz, setSelectedQuiz] = useState([]);
   const [viewAmt, setViewAmt] = useState();
   const [take, setTake] = useState(false);
+  const [title, setTitle] = useState("");
   const fetchQuizzes = async () => {
     try {
       const response = await axios.get("http://localhost:5000/auth/my-quiz", {
@@ -29,15 +30,32 @@ export const PageProvider = ({ children }) => {
     }
   };
 
-  const formatQuizData = (e) => {
-    setSelectedQuiz([
-      storedQuizzes[e].title,
-      storedQuizzes[e].author,
-      storedQuizzes[e].quiz,
-      storedQuizzes[e]._id,
-      storedQuizzes[e].views,
-    ]);
+  const fetchPopQuizzes = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/auth/pop-quiz");
+      setStoredQuizzes(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
   };
+
+  // const formatQuizData = (e) => {
+  //   setSelectedQuiz([
+  //     storedQuizzes[e].title,
+  //     storedQuizzes[e].author,
+  //     storedQuizzes[e].quiz,
+  //     storedQuizzes[e]._id,
+  //     storedQuizzes[e].views,
+  //   ]);
+  //   setTitle(storedQuizzes[e].title);
+  // };
+
+  // const fetchQuiz = (id) => {
+  //   return [
+  //     storedQuizzes[id]
+  //   ];
+  // };
 
   return (
     <PageContext.Provider
@@ -46,19 +64,21 @@ export const PageProvider = ({ children }) => {
         setToken,
         username,
         setUsername,
-
+        fetchPopQuizzes,
         isLoggedIn,
         setIsLoggedIn,
         fetchQuizzes,
         storedQuizzes,
         setStoredQuizzes,
-        formatQuizData,
+        // formatQuizData,
         viewAmt,
         setViewAmt,
         take,
         setTake,
         selectedQuiz,
         setSelectedQuiz,
+        title,
+        setTitle,
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
-import { usePageContext } from "../PageContext";
+import { usePageContext } from "../context/PageContext";
+import { useLocation } from "react-router-dom";
 import CreateAccount from "./createAccount";
 import axios from "axios";
 
@@ -9,21 +10,23 @@ function LoginPopup({ logPop, setLogPop }) {
   const [create, setCreate] = useState(false);
   const [err, setErr] = useState("");
   const [hasEffectRun, setHasEffectRun] = useState(false);
+  const location = useLocation();
   const {
     setToken,
     setUsername,
     fetchQuizzes,
-    storedQuizzes,
     isLoggedIn,
     setIsLoggedIn,
+    storedQuizzes,
   } = usePageContext("");
+  const isActive = location.pathname === "/myquiz";
 
   useEffect(() => {
-    if (isLoggedIn && storedQuizzes.length === 0 && !hasEffectRun) {
+    if (isLoggedIn && storedQuizzes.length === 0 && !hasEffectRun && isActive) {
       fetchQuizzes();
       setHasEffectRun(true);
     }
-  }, [fetchQuizzes, isLoggedIn, hasEffectRun, storedQuizzes]);
+  }, [fetchQuizzes, isLoggedIn, hasEffectRun, storedQuizzes, isActive]);
 
   if (!logPop) return null;
 

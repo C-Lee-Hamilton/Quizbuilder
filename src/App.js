@@ -1,12 +1,18 @@
 import "./App.css";
-import { PageProvider } from "./PageContext";
+import { PageProvider } from "./context/PageContext";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Root from "./root/Root";
 import Search from "./pages/Search";
 import Popular from "./pages/Popular";
 import MyQuiz from "./pages/MyQuiz";
+import TakeQuiz from "./pages/TakeQuiz";
+import EditQuiz from "./components/EditQuiz";
+import NewQuiz from "./components/NewQuiz";
 
+//break page context up
+//add colors, change color scheme, label things
+//refresh stuff last
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,12 +23,24 @@ const router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: "/Popular",
+        index: true,
         element: <Popular />,
       },
       {
-        path: "/MyQuiz",
+        path: "/myquiz",
         element: <MyQuiz />,
+      },
+      {
+        path: "/takequiz/:quizId",
+        element: <TakeQuiz />,
+      },
+      {
+        path: "/edit/:quizId",
+        element: <EditQuiz />,
+      },
+      {
+        path: "/newquiz",
+        element: <NewQuiz />,
       },
     ],
   },
