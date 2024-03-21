@@ -32,11 +32,11 @@ function Header({ logPop, setLogPop }) {
   };
 
   return (
-    <div>
-      <div className="w-full flex justify-between">
+    <div className="flex w-full flex-col">
+      <div className="w-full flex  justify-between">
         <button
           onClick={loginClick}
-          className="px-2 py-0 border-2 justify-between lg:text-3xl sm:text-sm mx-2 bg-green-500 bg-opacity-50 text-white rounded-lg my-2  lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+          className="px-2  py-0 border-2 justify-between lg:text-3xl sm:text-sm mx-2 bg-green-500 bg-opacity-50 text-white rounded-lg my-2  lg:mx-4 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
         >
           {isLoggedIn ? "Logout" : "Login"}
         </button>
@@ -50,12 +50,12 @@ function Header({ logPop, setLogPop }) {
             isActive("/Search")
               ? "bg-white text-green-500 bg-opacity-100 "
               : "bg-green-500 text-white bg-opacity-50"
-          }   px-4 py-1     border-2 lg:text-3xl sm:text-sm  rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
+          }   px-4 py-1  mx-2   border-2 lg:text-3xl sm:text-sm  rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
         >
           Search
         </Link>
       </div>
-      <div className="w-full flex justify-between">
+      <div className="w-3/4 mx-auto flex justify-between">
         <Link
           to="/"
           className={` ${
@@ -72,7 +72,7 @@ function Header({ logPop, setLogPop }) {
             isActive("/myquiz")
               ? "bg-white text-green-500 bg-opacity-100 "
               : "bg-green-500 text-white bg-opacity-50"
-          } px-4 py-1  mr-2   border-2 lg:text-3xl sm:text-sm    rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
+          } px-4 py-1    border-2 lg:text-3xl sm:text-sm    rounded-lg my-2  hover:bg-white hover:text-green-500 active:scale-95 shadow-custom`}
         >
           My Quizzes
         </Link>

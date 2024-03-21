@@ -10,7 +10,7 @@ import TakeQuiz from "./pages/TakeQuiz";
 import EditQuiz from "./components/EditQuiz";
 import NewQuiz from "./components/NewQuiz";
 
-//refresh stuff last
+//fix thing in edit quiz
 
 const router = createBrowserRouter([
   {
@@ -36,6 +36,9 @@ const router = createBrowserRouter([
       {
         path: "/edit/:quizId",
         element: <EditQuiz />,
+        error: (
+          <div>I want to make it navigate back a page if this happens</div>
+        ),
       },
       {
         path: "/newquiz",

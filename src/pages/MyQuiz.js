@@ -15,7 +15,7 @@ function MyQuiz() {
   }, [fetchQuizzes]);
 
   return (
-    <div className="flex-1 flex flex-col w-full items-center ">
+    <div className="flex-1 flex flex-col w-full  items-center ">
       <div className=" flex flex-col ">
         {isLoggedIn && (
           <>
@@ -36,11 +36,14 @@ function MyQuiz() {
         </div>
       )}
 
-      <div className="w-full ">
+      <div className="w-full flex justify-between items-center flex-col mx-auto">
         {storedQuizzes.map((quiz, index) => (
-          <div key={index} className="text-white w-full">
+          <div
+            key={index}
+            className="text-white flex justify-between mx-auto w-3/4 mt-4"
+          >
             <Link
-              className=" border-solid w-full rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
+              className=" border-solid w-3/4 rounded-lg my-2 mx-2 bg-green-500 border-2 border-white-100 hover:bg-white hover:text-green-500 active:scale-95 shadow-custom"
               to={`/takequiz/${quiz._id}`}
             >
               {quiz.title}
@@ -48,7 +51,7 @@ function MyQuiz() {
 
             <Link
               to={`/edit/${quiz._id}`}
-              className=" border-solid px-1 rounded-lg my-2 text-lg text-green-500 bg-white border-2 border-white-100 hover:bg-green-500 hover:text-white active:scale-95 shadow-custom"
+              className=" border-solid px-1 w-1/4 flex-1 rounded-lg my-2 text-lg text-green-500 bg-white border-2 border-white-100 hover:bg-green-500 hover:text-white active:scale-95 shadow-custom"
             >
               edit
             </Link>
